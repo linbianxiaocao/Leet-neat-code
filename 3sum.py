@@ -18,7 +18,7 @@ Suppose the input array is S[0..n-1]. 3SUM can be solved in O(n^2) time on avera
 Alternatively, the algorithm below first sorts the input array and then tests all possible pairs in a careful order that avoids the need to binary search for the pairs in the sorted list, achieving worst-case O(n^2) time, as follows.
 """
 
-class Solution(object):
+class Solution1(object):
     def threeSum(self, nums):
         """
         :type nums: List[int]
@@ -46,9 +46,40 @@ class Solution(object):
                     k -= 1
         
         return triplets
+
         
+class Solution2(object):
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """        
+        triplets = []
+        nums.sort()
         
-        
+        for i in range(len(nums)-2):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue  # (a) this avoids finding duplicate triplets
+            j = i + 1
+            k = len(nums) - 1
+            while j < k:        
+                temp_sum = nums[i] + nums[j] + nums[k]
+                if temp_sum < 0:
+                    j += 1
+                elif temp_sum > 0:
+                    k -= 1
+                else:  # found a triplet of sum 0
+                    triplet = [nums[i], nums[j], nums[k]]
+                    triplets.append(triplet)
+                    j += 1
+                    k -= 1
+                # (b) this avoids finding duplicate triplets
+                while j > i+1 and j < k and nums[j] == nums[j-1]:
+                    j += 1
+                while k < len(nums)-1 and j < k and nums[k] == nums[k+1]:
+                    k -= 1
+
+        return triplets        
         
         
         
