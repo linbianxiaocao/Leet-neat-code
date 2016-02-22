@@ -38,3 +38,17 @@ class Solution2(object):
         n.next = head
         
         return new_head
+
+class Solution3(object):
+    def reverseList(self, head):
+	# same algorithm as reverse() function in reverse_linked_list.py
+        if head == None:
+            return None
+	dummy = ListNode(0)
+	dummy.next = head
+	while head.next != None:
+	    tmp = head.next
+	    head.next = tmp.next
+	    tmp.next = dummy.next
+	    dummy.next = tmp
+	return dummy.next
