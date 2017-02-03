@@ -13,7 +13,7 @@ A solution set is:
 
 REF: https://en.wikipedia.org/wiki/3SUM
 Quadratic algorithm
-Suppose the input array is S[0..n-1]. 3SUM can be solved in O(n^2) time on average by inserting each number S[i] into a hash table, and then for each index i and j, checking whether the hash table contains the integer -(S[i]+S[j]).
+Suppose the input array is S[0..n-1]. 3SUM can be solved in O(n^2) time on average by inserting each number S[i] into a hash table, and then for each index i and j, checking whether the hash table contains the integer -(S[i]+S[j]). (For this method, need to consider duplicates in S. Question is how to place duplicated values in hash table?)
 
 Alternatively, the algorithm below first sorts the input array and then tests all possible pairs in a careful order that avoids the need to binary search for the pairs in the sorted list, achieving worst-case O(n^2) time, as follows.
 """
