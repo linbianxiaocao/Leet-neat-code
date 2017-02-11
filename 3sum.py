@@ -40,29 +40,30 @@ class Solution1(object):
                     k -= 1
                 else:  # found a triplet of sum 0
                     triplet = [nums[i], nums[j], nums[k]]
-                    if triplet not in triplets: # (b) this avoids finding duplicate triplets
+                    if triplet not in triplets:
+                        # (b) this avoids finding duplicate triplets
                         triplets.append(triplet)
                     j += 1
                     k -= 1
-        
+
         return triplets
 
-        
+
 class Solution2(object):
     def threeSum(self, nums):
         """
         :type nums: List[int]
         :rtype: List[List[int]]
-        """        
+        """
         triplets = []
         nums.sort()
-        
+
         for i in range(len(nums)-2):
             if i > 0 and nums[i] == nums[i-1]:
                 continue  # (a) this avoids finding duplicate triplets
             j = i + 1
             k = len(nums) - 1
-            while j < k:        
+            while j < k:
                 temp_sum = nums[i] + nums[j] + nums[k]
                 if temp_sum < 0:
                     j += 1
@@ -79,18 +80,4 @@ class Solution2(object):
                 while k < len(nums)-1 and j < k and nums[k] == nums[k+1]:
                     k -= 1
 
-        return triplets        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        return triplets
