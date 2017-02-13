@@ -1,6 +1,7 @@
 import sys
 import collections
 
+
 class Solution(object):
     def ladderLength1(self, beginWord, endWord, wordList):
         """
@@ -9,7 +10,7 @@ class Solution(object):
         :type wordList: List[str]
         :rtype: int
         """
-        self.word_chain = [beginWord,]
+        self.word_chain = [beginWord, ]
         self.visited = {}
         self.shortest = sys.maxsize
         self.dfs(beginWord, endWord, wordList)
@@ -31,7 +32,7 @@ class Solution(object):
         """
         # self.word_dict = {}
         return self.bfs(beginWord, endWord, wordList)
-
+              
 
 #     def bfs(self, beginWord, endWord, wordList):
 #         queue = collections.deque([(beginWord, 1)])
@@ -48,7 +49,6 @@ class Solution(object):
 # 
 #         return 0
 
-
     def bfs(self, beginWord, endWord, wordList):
         word_dict = {}
         for word in wordList:
@@ -62,16 +62,17 @@ class Solution(object):
                 return curr_len
 
             for i in range(wlen):
-                part1 = curr_word[:i]; part2 = curr_word[i+1:]
+                part1 = curr_word[:i]
+                part2 = curr_word[i+1:]
                 for j in 'abcdefghijklmnopqrstuvwxyz':
                     if curr_word[i] != j:
                         next_word = part1 + j + part2
-                        if next_word in word_dict and word_dict[next_word] == 0:
+                        if next_word in word_dict\
+                           and word_dict[next_word] == 0:
                             queue.append((next_word, curr_len+1))
                             word_dict[next_word] = 1
 
         return 0
-
 
     def diff(self, word1, word2):
         d = 0
@@ -118,8 +119,7 @@ class Solution(object):
 # 
 #         self.visited[beginWord] = False
 
-
-
 cs = Solution()
-rlen = cs.ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"])
+rlen = cs.ladderLength("hit", "cog",
+                       ["hot", "dot", "dog", "lot", "log", "cog"])
 print(rlen)
