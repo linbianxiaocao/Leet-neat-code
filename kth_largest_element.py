@@ -11,6 +11,7 @@ import random
 
 
 class Solution(object):
+    # quick select algorithm (based on idea of quick sort, ref: 算法导论
     def findKthLargest(self, nums, k):
         """
         :type nums: List[int]
