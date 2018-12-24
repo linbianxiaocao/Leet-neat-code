@@ -29,7 +29,8 @@ http://bookshadow.com/weblog/2015/12/06/leetcode-count-of-smaller-numbers-after-
 树节点TreeNode记录下列信息：
 
 元素值：val
-小于该节点的元素个数：leftCnt
+* 小于该节点的元素个数：leftCnt
+* leftCnt means the total count of integers in the left subtree of current node
 节点自身的元素个数：cnt
 左孩子：left
 右孩子：right
