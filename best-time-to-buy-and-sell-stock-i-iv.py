@@ -36,6 +36,7 @@ public:
         }
         vector<int> buy(len+1, INT_MIN), sell(len+1, 0);
         for(auto val: prices)
+        // 动态规划， 每次assume之前的buy[0:k+1], sell[0:k+1]数组已经是最优，遍历完prices即是全局最优
         {
             for(int i =1; i <= k; i++)
             {
