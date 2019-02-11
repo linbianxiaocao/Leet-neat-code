@@ -1,0 +1,4 @@
+
+* https://www.jyt0532.com/2017/03/27/system-design/
+* http://horicky.blogspot.com/2009/11/nosql-patterns.html
+* https://github.com/donnemartin/system-design-primer
