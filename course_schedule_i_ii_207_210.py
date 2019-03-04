@@ -1,3 +1,5 @@
+# ii is almost the same as i. I just wrote the python code in leetcode.
+
 # https://blog.csdn.net/fuxuemingzhu/article/details/82951771
 # note, 拓扑排序学习到了，dfs设置三个标记很有用(为了剪枝)
 
