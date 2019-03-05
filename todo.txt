@@ -5,4 +5,5 @@
 * interview tips:
 https://www.interviewcake.com/coding-interview-meditation
 https://www.interviewcake.com/coding-interview-tips
+http://www.themianjing.com/2016/01/airbnb-onsite-2/
 
