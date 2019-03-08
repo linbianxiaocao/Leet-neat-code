@@ -79,5 +79,32 @@ public:
     }
 };
 
+# Definition for an interval.
+# class Interval(object):
+#     def __init__(self, s=0, e=0):
+#         self.start = s
+#         self.end = e
+
+from heapq import *
+
+class Solution(object):
+    def minMeetingRooms(self, intervals):
+        """
+        :type intervals: List[Interval]
+        :rtype: int
+        """
+        intervals = sorted(intervals, key=lambda x: x.start)
+        heap = []
+        for i in intervals:
+            # if the new meeting happens after the earliest meeting ends,
+            # replace the earliest ending meeting with the new meeting
+            if heap and i.start >= heap[0]:
+                heappop(heap)
+                heappush(heap, i.end)
+            else:
+                heappush(heap, i.end)
+
+        return len(heap)
+https://nb4799.neu.edu/wordpress/?p=2205
 
 
