@@ -23,6 +23,7 @@ class Solution(object):
             res.append(path)
             return
         for i in xrange(index, len(nums)):
+            # prevent duplication
             if i > index and nums[i] == nums[i-1]:
                 continue
             self.dfs(nums, target - nums[i], i + 1, res, path + [nums[i]])

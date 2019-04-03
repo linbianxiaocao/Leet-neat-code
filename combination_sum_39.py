@@ -29,3 +29,9 @@ class Solution(object):
                 return
             self.dfs(nums, target - nums[i], i, res, path + [nums[i]])
 
+e.g.,
+dfs([2, 3, 5, 7], 7) ->
+    dfs([2, 3, 5, 7], 5)
+    dfs([3, 5, 7], 4)
+    dfs([5, 7], 2)
+    dfs([7], 0)
