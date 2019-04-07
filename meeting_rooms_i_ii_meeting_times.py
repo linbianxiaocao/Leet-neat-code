@@ -107,4 +107,37 @@ class Solution(object):
         return len(heap)
 https://nb4799.neu.edu/wordpress/?p=2205
 
+# airbnb meeting times: in my opinion, harder, because it involves two loops
 
+# Input is a number of meetings (start_time, end_time)。 Output is a number of time intervals (start_time, end_time),
+# where there is no meetings.
+# For exmaple, input is [[1, 3], [6, 7]], [[2, 4]], [[2, 3], [9, 12]] ]
+# output [[4, 6], [7, 9]]
+
+import heapq
+class Solution(object):
+    def findIntervals(self, intervals):
+        res = []
+        h = []
+        intervals = sorted(intervals, key=lambda x:x[0])
+        heapq.heappush(h, intervals[0][1])
+
+        i = 1
+        while i < len(intervals):
+
+            while len(h) > 0 and intervals[i][0] >= h[0]:
+                t = heapq.heappop(h)
+            if len(h) == 0:
+                if intervals[i][0] > t:
+                    res.append([t, intervals[i][0]])
+                heapq.heappush(h, intervals[i][1])
+            else:
+                heapq.heappush(h, intervals[i][1])
+
+            i += 1
+        return res
+
+s = Solution()
+intervals = [[1, 3], [6, 7], [2, 4], [2, 3], [9, 12]]
+res = s.findIntervals(intervals)
+print(res)
