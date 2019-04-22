@@ -39,7 +39,12 @@ y
    cb [ 2 1 1 2 ]
    cs [ 2 1 1 2 ]
    ct [ 2 1 1 1 ]
-每一行的最后一位数字即为当前单词与target word的edit distance。显然，如果该值小于等于k，则加入到结果中。最终返回的结果只有一个单词，即ct。 注意，遍历到单词cb时，edit distance已经为2，且长度已经与cat相等，也就意味着该节点的子树中所包含的单词与target word的edit distance无论如何都不可能小于等于k，因此直接从该子树返回。所以单词cby是没有被遍历到的。这也就是Trie做这题的便利之处，当字典较大时会明显提高效率。
+每一行的最后一位数字即为当前单词与target word的edit distance。显然，如果该值小于等于k，则加入到结果中。最终返回的结果只有一个单词，即ct。
+
+注意，遍历到单词cb时，edit distance已经为2，且长度已经与cat相等，
+(这边作者有笔误，cb->cat 距离是2，但cbt->cat距离又减回1，所以一定要加一个长度相等的判断)
+
+也就意味着该节点的子树中所包含的单词与target word的edit distance无论如何都不可能小于等于k，因此直接从该子树返回。所以单词cby是没有被遍历到的。这也就是Trie做这题的便利之处，当字典较大时会明显提高效率。
 
 
 class TrieNode {
@@ -122,3 +127,56 @@ class TrieNode {
                 find(node.children[i], result, k, target, next);
             }
     }
+
+// 以上答案没有用到剪枝，看我leetcode里面代码实现 (发现以上解法没有剪枝是有道理的，不好直接减）
+import sys
+
+class TrieNode(object):
+    def __init__(self):
+        self.childs = {}
+        self.isWord = False
+
+class Trie(object):
+    def __init__(self):
+        self.root = TrieNode()
+
+    def addWord(self, word):
+        node = self.root
+        for letter in word:
+            if letter not in node.childs:
+                node.childs[letter] = TrieNode()
+            node = node.childs[letter]
+        node.isWord = True
+
+class Solution(object):
+    def findWords(self, target, words, K):
+        self.K = K
+        self.trie = Trie()
+        for word in words:
+            self.trie.addWord(word)
+
+        self.res = []
+        dp = [i for i in range(len(target)+1)]
+        self.dfs(self.trie.root, "", target, dp)
+        return self.res
+
+    def dfs(self, node, path, target, dp):
+        if node.isWord and dp[-1] <= self.K:
+            self.res.append(path)
+
+        for letter, next in node.childs.items():
+            np = [0 for _ in range(len(target) + 1)]
+            np[0] = len(path)+1
+            for j in range(1, len(target) + 1):
+                u = 0 if letter == target[j-1] else 1
+                np[j] = min(np[j-1]+1, dp[j]+1, dp[j-1] + u)
+            # print(path+letter, ", ", dp, ", ", np)
+
+            self.dfs(next, path+letter, target, np)
+
+words = ["abc", "abd", "abcd", "adc"]
+target = "ac"
+k = 1
+s = Solution()
+res = s.findWords(target, words, k)
+print(res)

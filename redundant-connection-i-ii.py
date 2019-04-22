@@ -86,3 +86,46 @@ public:
         return i == root[i] ? i : getRoot(root, root[i]);
     }
 };
+
+
+# 弄明白了，分情况，但是注意找到入度为2的边后，mark edge[1]=0, 从图里去掉
+class Solution(object):
+    def findRedundantDirectedConnection(self, edges):
+        """
+        :type edges: List[List[int]]
+        :rtype: List[int]
+        """
+
+        parent = [0] * (len(edges)+1)
+        first, second = [], []
+        for edge in edges:
+            u, v = edge[0], edge[1]
+            if parent[v] == 0:
+                parent[v] = u
+            else:
+                first = [parent[v], v]
+                second = edge[:]
+                edge[1] = 0   # important: mark edge[1] as 0 to get rid of this edge
+
+        root = list(range(len(edges)+1))
+
+        for edge in edges:
+            if edge[1] == 0:
+                continue
+            u, v = edge[0], edge[1]
+            x = self.getRoot(root, u)
+            y = self.getRoot(root, v)
+            if x == y:
+                return edge if len(first) == 0 else first
+            else:
+                root[y] = x
+
+        return second
+
+    def getRoot(self, root, i):
+        if i == root[i]:
+            return i
+        else:
+            r = self.getRoot(root, root[i])
+            root[i] = r
+            return r
