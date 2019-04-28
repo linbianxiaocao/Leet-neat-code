@@ -36,3 +36,6 @@ class Solution(object):
 http://www.cnblogs.com/grandyang/p/8215787.html
 https://blog.csdn.net/luke2834/article/details/79365645
 "最后就是t这一维我们可以通过滚动数组压掉，注意这样的话需要反向遍历更新dp"
+
+note:
+还要特别注意的是反向计算dp数组，这样的话可以复用一个二维的dp数组而不用针对一个新的k(步长和)就开辟一个新的二维数组。反向计算是为了保证能用到上一次(t-1)的dp数组的值去更新当前t的dp数组的值。如果正向计算，会把t-1的dp数组的值覆盖掉，导致错误的计算。

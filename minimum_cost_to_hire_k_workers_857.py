@@ -1,4 +1,4 @@
-# https://blog.csdn.net/fuxuemingzhu/article/details/829427
+# https://blog.csdn.net/fuxuemingzhu/article/details/82942731
 
 # 此题有两个排序，一个按照ratio比例排，一个用最大堆排工资
 
