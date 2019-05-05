@@ -6,3 +6,5 @@ https://blog.csdn.net/qq_41445952/article/details/80977067
 sum 表示 以这个节点为根的子树的所有子节点到该节点的距离的和；
 
 两个递归
+python:
+    https://blog.csdn.net/zjucor/article/details/80298082
