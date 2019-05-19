@@ -100,3 +100,7 @@ class BinarySearchTree(object):
                 root.cnt += 1
                 break
         return cnt
+
+
+# http://www.cnblogs.com/grandyang/p/5078490.html
+c++
