@@ -101,6 +101,113 @@ class BinarySearchTree(object):
                 break
         return cnt
 
-
+# c++
 # http://www.cnblogs.com/grandyang/p/5078490.html
-c++
+1. BST
+    int insert(Node *&root, int v) {
+        if (!root) return (root = new Node(v, 0)), 0;
+        if (root->val > v)
+            return root->smaller++, insert(root->left, v);
+        else
+            return insert(root->right, v)+root->smaller+(root->val<v?1:0);
+    }
+
+    vector<int> countSmaller(vector<int>& nums) {
+        vector<int> res(nums.size());
+        Node *root = NULL;
+        for (int i = nums.size()-1; i>=0; --i) {
+            res[i] = insert(root, nums[i]);
+        }
+        return res;
+    }
+
+# 1.1 BST huahua: https://zxi.mytechroad.com/blog/algorithms/array/leetcode-315-count-of-smaller-numbers-after-self/
+struct BSTNode {
+    int val, count, left_count;
+    BSTNode* left, right;
+    BSTNode(int val): val(val), count(1), left_count(0), 
+        left(nullptr), right{nullptr} {}
+    ~BSTNode() {delete left; delete right; }
+    int less_or_equal() const {return count + left_count;}
+};
+class Solution {
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        if (nums.empty()) return {};
+        std::reverse(nums.begin(), nums.end());
+        std::unique_ptr<BSTNode> root(new BSTNode(nums[0]));
+        vector<int> ans{0};
+        for (int i = 1; i < nums.size(); ++i)
+            ans.push_back(insert(root.get(), nums[i]));
+        std::reverse(ans.begin(), ans.end());
+        return ans;
+    }
+private:
+    int insert(BSTNode* root, int val) {
+        if (root->val == val) {
+            ++root->count;
+            return root->left_count;
+        } else if (val < root->val) {
+            ++root->left_count;
+            if (root->left == nullptr) {
+                root->left = new BSTNode(val);
+                return 0;
+            }
+            return insert(root->left, val);
+        } else {
+            if (root->right == nullptr) {
+                root->right = new BSTNode(val);
+                return root->less_or_equal();
+            }
+            return root->less_or_equal() + insert(root->right, val);
+        }
+    }
+};
+
+
+
+2.
+// Insert Sort
+class Solution {
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        vector<int> t, res(nums.size());
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            int d = distance(t.begin(), lower_bound(t.begin(), t.end(), nums[i]));
+            res[i] = d;
+            t.insert(t.begin() + d, nums[i]);
+        }
+        return res;
+    }
+};
+
+3. BinaryIndexedTree (Fenwick Tree)
+https://zxi.mytechroad.com/blog/algorithms/array/leetcode-315-count-of-smaller-numbers-after-self/
+
+class Solution {
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        // Sort the unique numbers
+        set<int> sorted(nums.begin(), nums.end());
+        // Map the number to its rank
+        unordered_map<int, int> ranks;
+        int rank = 0;
+        for (const int num : sorted)
+            ranks[num] = ++rank;
+        
+        vector<int> ans;
+        FenwickTree tree(ranks.size());
+        // Scan the numbers in reversed order
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            // Chechk how many numbers are smaller than the current number.
+            ans.push_back(tree.query(ranks[nums[i]] - 1));
+            // Increse the count of the rank of current number.
+            tree.update(ranks[nums[i]], 1);
+        }
+        
+        std::reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+
