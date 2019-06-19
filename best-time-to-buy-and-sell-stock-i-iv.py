@@ -5,6 +5,32 @@ i and ii are easy
 
 note: very smart, just by breaking the array into two parts, and iterate through all possible partitions
 
+c++
+    int maxProfit(vector<int>& prices) {
+        if (prices.size() <= 1) return 0;
+        int n = prices.size();
+        //f1[i]表示在price[i]之前进行一次交易所获得的最大利润(包括i)，f2[i]表示在price[i]之后进行一次交易所获得的最大利润(不包括i)
+        int f1[n] = {0}, f2[n] = {0};
+
+        int lowest_price = prices[0];
+        for (int i = 1; i < n; ++i) {
+            f1[i] = max(f1[i-1], prices[i]-lowest_price);
+            lowest_price = min(lowest_price, prices[i]);
+        }
+
+        int max_price = prices[n-1];
+        for (int i = n-2; i >= 1; --i) {
+            f2[i-1] = max(f2[i], max_price-prices[i]);
+            max_price = max(max_price, prices[i]);
+        }
+
+        int res = 0;
+        for (int i = 0; i < n; ++i)
+            res = max(res, f1[i] + f2[i]);
+
+        return res;
+    }
+
 # iv: https://blog.csdn.net/qq508618087/article/details/51678245
 思路：当k >= len/2时，问题就退化成了可以交易任意次了，所以只要将任意两天股票差大于０的加起来即可．
 
@@ -47,5 +73,23 @@ public:
         return sell[k];
     }
 };
+以上方法是先循环次数，再循环天数
+
+# Tushar explanation very well
+https://www.youtube.com/watch?v=oDhu5uGq_ic
+
+ith transaction, jth day
+先循环天数，再循环次数
+T[i][j] = max(
+    T[i][j-1], # no transaction on jth day
+    T[i-1][m] + price[j]-price[m], # buy at mth day, sell at jth day, for m = 0, 1, j-1
+                                   # this will cover sell at mth day, buy at mth day again, but it's a case that won't matter for the result
+                                   # Tushar showed the for loop (m=0,1,..j-1) can be optimized in constant time
+    )
+
+
+
+
+
 
 
