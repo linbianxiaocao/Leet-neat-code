@@ -87,8 +87,141 @@ T[i][j] = max(
                                    # Tushar showed the for loop (m=0,1,..j-1) can be optimized in constant time
     )
 
+optimized:
+T[i][j] = max(
+        T[i][j-1],
+        price[j] + maxDiff where maxDiff = max(maxDiff, T[i-1][j]-p[j])
 
 
+https://www.cnblogs.com/grandyang/p/4295761.html
+但这道题还有个坑，就是如果k的值远大于prices的天数，比如k是好几百万，而prices的天数就为若干天的话，上面的DP解法就非常的没有效率，应该直接用Best Time to Buy and Sell Stock II 买股票的最佳时间之二的方法来求解，所以实际上这道题是之前的二和三的综合体，代码如下：
+
+
+class Solution {
+public:
+    // tushar: https://www.youtube.com/watch?v=oDhu5uGq_ic
+    // slower method but easier to understand    
+// T[i][j] = max(
+//     T[i][j-1], # no transaction on jth day
+//     T[i-1][m] + price[j]-price[m], # buy at mth day, sell at jth day, for m = 0, 1, j-1
+//                                    # this will cover sell at mth day, buy at mth day again, but it's a case that won't matter for the result
+//                                    # Tushar showed the for loop (m=0,1,..j-1) can be optimized in constant time
+//     )    
+// O(k * n2)
+    int maxProfit(int k, vector<int>& prices) {
+        if (k == 0 || prices.empty()) return 0;
+        int n = prices.size();
+        
+        if (k >= n) return solveMaxProfit(prices);
+
+        vector<vector<int>> dp(k+1, vector<int>(n, 0));
+        for (int i = 1; i <= k; ++i) {
+            for (int j = 1; j <= n-1; ++j) {
+                int max_val = 0;
+                for (int m = 0; m <= j-1; ++m)
+                    max_val = max(max_val, prices[j] - prices[m] + dp[i-1][m]);
+                dp[i][j] = max(max_val, dp[i][j-1]);   
+            }            
+        }
+        return dp[k][n-1];
+    }
+    
+    int solveMaxProfit(vector<int> &prices) {
+        int res = 0;
+        for (int i = 1; i < prices.size(); ++i) {
+            if (prices[i] - prices[i - 1] > 0) {
+                res += prices[i] - prices[i - 1];
+            }
+        }
+        return res;
+    }    
+};
+
+
+
+class Solution {
+public:
+    // tushar: https://www.youtube.com/watch?v=oDhu5uGq_ic
+    // faster method O(k * n)
+    int maxProfit(int k, vector<int>& prices) {
+        if (k == 0 || prices.empty()) return 0;
+        int n = prices.size();
+        
+        if (k >= n) return solveMaxProfit(prices);        
+        
+        vector<vector<int>> dp(k+1, vector<int>(n, 0));
+        for (int i = 1; i <= k; ++i) {
+            int max_diff = -prices[0];
+            for (int j = 1; j <= n-1; ++j) {
+                dp[i][j] = max(dp[i][j-1], max_diff + prices[j]);
+                max_diff = max(max_diff, dp[i-1][j] - prices[j]);  
+            }            
+        }
+        return dp[k][n-1];
+    }
+    
+    int solveMaxProfit(vector<int> &prices) {
+        int res = 0;
+        for (int i = 1; i < prices.size(); ++i) {
+            if (prices[i] - prices[i - 1] > 0) {
+                res += prices[i] - prices[i - 1];
+            }
+        }
+        return res;
+    }       
+};
+
+
+// https://www.cnblogs.com/grandyang/p/4295761.html
+// https://blog.csdn.net/linhuanmars/article/details/23236995
+// 这么想还是有点复杂的，记录几点帮助理解：
+/**
+1. 这里使用一维滚动数组优化代替二维数组，特别注意内层循环要从后往前。如果是从前往后，就相当于用第i天的值覆盖了第i-1天的global和local数组，导致后面的计算出错。
+2. 递推公式不是很好理解，试图结合这个例子：
+day:   0 1 2 3 4
+price: 2 8 3 1 9
+可见diff = price[4]-price[3] = 8
+global[3][1] = 6
+local[3][2] = -2+8-3+1 = 4
+根据公式得到
+local[4][2] = max(-2+8-3+9, 6+8) = 14
+同时可见global[3][2] = 6
+global[4][2] = max(6, 14) = 14
+
+调整一下例子，再想
+day:   0 1 2 3 4
+price: 2 8 1 3 9
+可见diff = 9-3 = 6
+global[3][1] = 6,
+local[3][2] = -2+8-1+3 = 8
+
+*/
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        if (prices.empty()) return 0;
+        if (k >= prices.size() / 2) return solveMaxProfit(prices);
+        int g[k+1] = {0};
+        int l[k+1] = {0};
+        for (int i = 0; i < prices.size() - 1; ++i) {
+            int diff = prices[i+1] - prices[i];
+            for (int j = 1; j <= k; ++j) {
+                l[j] = max(g[j-1] + max(diff, 0), l[j] + diff);
+                g[j] = max(g[j], l[j]);
+            }
+        }
+        return g[k];
+    }
+    
+    int solveMaxProfit(vector<int>& prices) {
+        int res = 0;
+        for (int i = 1; i < prices.size(); ++i) {
+            if (prices[i] - prices[i-1] > 0)
+                res += prices[i] - prices[i-1];
+        }
+        return res;
+    }
+};
 
 
 
