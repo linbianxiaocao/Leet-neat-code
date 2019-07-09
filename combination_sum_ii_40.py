@@ -28,3 +28,30 @@ class Solution(object):
                 continue
             self.dfs(nums, target - nums[i], i + 1, res, path + [nums[i]])
 
+
+class Solution {
+public:
+    // https://www.cnblogs.com/grandyang/p/4419386.html
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> res;
+        vector<int> path;
+        sort(candidates.begin(), candidates.end());
+        dfs(candidates, target, 0, res, path);
+        return res;
+    }
+    
+    void dfs(vector<int>& nums, int target, int index, vector<vector<int>>& res, vector<int>& path) {
+        if (target < 0) return;
+        if (target == 0) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = index; i < nums.size(); ++i) {
+            if (i > index && nums[i] == nums[i-1]) continue;
+            path.push_back(nums[i]);
+            dfs(nums, target-nums[i], i+1, res, path);
+            path.pop_back();
+        }
+    }
+};
+
