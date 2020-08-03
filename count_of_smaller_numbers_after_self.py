@@ -210,4 +210,16 @@ public:
     }
 };
 
+4. bisect to maintain a sorted list
+import bisect
+class Solution(object):
+    def countSmaller(self, nums):
+        result = []
+        sortedList = []
+        for num in nums[::-1]:
+            position = bisect.bisect_left(sortedList, num)
+            result.append(position)
+            sortedList.insert(position, num)
+        return result[::-1]
+
 
