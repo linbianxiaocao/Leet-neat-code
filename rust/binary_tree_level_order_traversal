@@ -1,0 +1,31 @@
+    // LeetCode 102: Binary Tree Level Order Traversal
+    pub fn level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        if root.is_none() { return vec![]; }
+
+        let mut result: Vec<Vec<i32>> = vec![];
+        let mut queue: VecDeque<Rc<RefCell<TreeNode>>> = VecDeque::new();
+
+        queue.push_back(Rc::clone(&root.unwrap()));
+
+        while !queue.is_empty() {
+            let level_size = queue.len();
+            let mut current_level: Vec<i32> = vec![];
+
+            for _ in 0..level_size {
+                if let Some(node) = queue.pop_front() {
+                    current_level.push(node.borrow().val);
+
+                    if let Some(left) = node.borrow().left.clone() { 
+                        queue.push_back(Rc::clone(&left));
+                    }
+                    if let Some(right) = node.borrow().right.clone() { queue.push_back(Rc::clone(&right));}
+                }
+
+            }
+
+            result.push(current_level);
+
+        }
+
+        result
+    }
