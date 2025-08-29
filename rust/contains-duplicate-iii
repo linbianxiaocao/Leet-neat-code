@@ -1,0 +1,20 @@
+use std::collections::BTreeSet;
+
+impl Solution {
+    pub fn contains_nearby_almost_duplicate(nums: Vec<i32>, index_diff: i32, value_diff: i32) -> bool {
+        let k = index_diff as usize;
+        let mut window = BTreeSet::new();
+        for (i, &v) in nums.iter().enumerate(){
+            if i > k {
+                window.remove(&nums[i - k - 1]);
+            }
+            let range = v - value_diff..=v + value_diff;
+			      // if has at least 1 elem in range
+            if window.range(range).next().is_some(){
+                return true;
+            }
+            window.insert(v);
+        }
+        false        
+    }
+}
