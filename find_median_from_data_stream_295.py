@@ -1,6 +1,40 @@
-# 觉得比较好的参考文献：http://www.cnblogs.com/grandyang/p/4896673.html
+# https://www.hrwhisper.me/leetcode-find-median-from-data-stream/
 
-see my own implementation in leetcode
+import heapq
+class MedianFinder:
+
+    def __init__(self):
+        self.left = []  # max heap
+        self.right = [] # min heap        
+
+    def addNum(self, num: int) -> None:
+        if not self.left or num < -self.left[0]:
+            heapq.heappush(self.left, -num)
+            if len(self.left) >= len(self.right) + 2:
+                temp = heapq.heappop(self.left)
+                heapq.heappush(self.right, -temp)
+        else:
+            heapq.heappush(self.right, num)
+            if len(self.right) > len(self.left):
+                temp = heapq.heappop(self.right)
+                heapq.heappush(self.left, -temp)
+
+    def findMedian(self) -> float:
+        ll = len(self.left)
+        lr = len(self.right)
+        if (ll + lr) % 2 == 1:
+            return -self.left[0]   
+        else:
+            return (-self.left[0] + self.right[0]) / 2     
+
+
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()
+
+
+# 觉得比较好的参考文献：http://www.cnblogs.com/grandyang/p/4896673.html
 
 #include <iostream>
 #include <vector>
