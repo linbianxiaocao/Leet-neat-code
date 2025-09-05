@@ -150,3 +150,180 @@ class Solution(object):
                     count -= union((r, c), (nr, nc))
             result.append(count)
         return result
+
+# Review binary search template
+# https://zxi.mytechroad.com/blog/sp/sp5-binary-search/
+# Leetcode 69. Sqrt(x)
+# Leetcode 278. First Bad Version
+# Leetcode 875. Koko Eating Bananas
+# Leetcode 378. Kth Smallest Element in a Sorted Matrix
+
+# Leetcode 1249. Minimum Remove to Make Valid Parentheses
+class Solution(object):
+    def minRemoveToMakeValid(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        stack = []
+        to_remove = set()
+        for i, char in enumerate(s):
+            if char == '(':
+                stack.append(i)
+            elif char == ')':
+                if stack:
+                    stack.pop()
+                else:
+                    to_remove.add(i)
+        to_remove = to_remove.union(set(stack))
+        return ''.join(char for i, char in enumerate(s) if i not in to_remove)
+
+import bisect
+import collections
+from typing import List
+
+# Leetcode 140. Word Break II
+class Solution(object):
+    def wordBreak(self, s, wordDict):
+        """
+        :type s: str
+        :type wordDict: List[str]
+        :rtype: List[str]
+        """
+        def backtrack(start, path):
+            if start == len(s):
+                result.append(" ".join(path))
+                return
+            for end in range(start + 1, len(s) + 1):
+                if s[start:end] in wordDict:
+                    backtrack(end, path + [s[start:end]])
+
+        result = []
+        backtrack(0, [])
+        return result
+    
+# Leetcode 140. Word Break II
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
+        wordSet = set(wordDict)
+        n = len(s)
+        dp = [[] for _ in range(n + 1)]
+        dp[0] = [""]
+
+        for i in range(1, n + 1):
+            for j in range(i):
+                if dp[j] and s[j:i] in wordSet:
+                    for prev in dp[j]:
+                        dp[i].append((prev + " " + s[j:i]).strip())
+
+        return dp[n]
+
+# Leetcode 973. K Closest Points to Origin
+import heapq
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        h = []
+        for p in points:
+            heapq.heappush(h, (p[0]**2 + p[1]**2, p)) # min heap
+        kPoints = []
+        for i in range(k):
+            p = heapq.heappop(h)[1]
+            kPoints.append(p)
+        return kPoints
+
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        h = []
+        for p in points:
+            heapq.heappush(h, (-p[0]**2-p[1]**2, p)) # simulate max heap
+            if len(h) > k:
+                heapq.heappop(h)
+        
+        kPoints = []
+        while len(h) > 0:
+            p = heapq.heappop(h)[1]
+            kPoints.append(p)
+        return kPoints
+
+# Leetcode 347. Top K Frequent Elements
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        h = []
+        res = []
+        
+        # count frequency
+        df = collections.defaultdict(int)
+        for num in nums:
+            df[num] += 1
+        
+        # 用最小堆，方便弹出最小的        
+        for num, freq in df.items():
+            heapq.heappush(h, (freq, num))
+            if len(h) > k:
+                heapq.heappop(h)
+        
+        while len(h) > 0:
+            _, num = heapq.heappop(h)
+            res.append(num)
+        
+        return res
+
+# Leetcode 1047. Remove All Adjacent Duplicates In String
+class Solution:
+    def removeDuplicates(self, s: str) -> str:
+        stack = []
+        for char in s:
+            if stack and stack[-1] == char:
+                stack.pop()
+            else:
+                stack.append(char)
+        return ''.join(stack)
+    
+# Leetcode 207. Course Schedule
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        graph = collections.defaultdict(list)
+        indegree = [0] * numCourses
+        
+        for course, pre in prerequisites:
+            graph[pre].append(course)
+            indegree[course] += 1
+            
+        queue = collections.deque()
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
+                
+        count = 0
+        while queue:
+            node = queue.popleft()
+            count += 1
+            for neighbor in graph[node]:
+                indegree[neighbor] -= 1
+                if indegree[neighbor] == 0:
+                    queue.append(neighbor)
+                    
+        return count == numCourses
+    
+# Leetcode 346. Moving Average from Data Stream
+class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.queue = collections.deque()
+        self.total = 0
+
+    def next(self, val: int) -> float:
+        if len(self.queue) == self.size:
+            self.total -= self.queue.popleft()
+        self.queue.append(val)
+        self.total += val
+        return self.total / len(self.queue)
+    
+# Leetcode 1014. Best Sightseeing Pair
+class Solution:
+    def maxScoreSightseeingPair(self, values: List[int]) -> int:
+        maxLeft = values[0] + 0
+        maxScore = 0
+        for j in range(1, len(values)):
+            maxScore = max(maxScore, maxLeft + values[j] - j)
+            maxLeft = max(maxLeft, values[j] + j)
+        return maxScore
